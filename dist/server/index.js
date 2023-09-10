@@ -18,17 +18,17 @@ const todoInputType = zod_1.z.object({
 });
 const appRouter = (0, trpc_1.router)({
     // ...
-    createTodo: trpc_1.publicProcedure
-        .input(todoInputType)
-        .mutation((opts) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("kya re pagal hi");
-        const title = opts.input.title;
-        const description = opts.input.description;
-        //do db stuff here
-        return {
-            id: "1",
-        };
-    })),
+    //              createTodo: publicProcedure
+    //                 .input(todoInputType)
+    //                 .mutation(async (opts) =>{
+    //                     console.log("kya re pagal hi");
+    //                     const title = opts.input.title;
+    //                     const description = opts.input.description;
+    // //do db stuff here
+    //                     return {
+    //                         id: "1",
+    //                     }
+    //                 }),
     signUp: trpc_1.publicProcedure
         .input(zod_1.z.object({
         email: zod_1.z.string(),
@@ -41,11 +41,29 @@ const appRouter = (0, trpc_1.router)({
         return {
             token
         };
+    })),
+    createTodo: trpc_1.publicProcedure
+        .input(zod_1.z.object({
+        title: zod_1.z.string()
+    }))
+        .mutation((opts) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log(opts.ctx.username);
+        return {
+            id: "1"
+        };
     }))
 });
 // Export type router type signature,
 // NOT the router itself.
 const server = (0, standalone_1.createHTTPServer)({
     router: appRouter,
+    createContext(opts) {
+        let authHeader = opts.req.headers["authorization"];
+        console.log(authHeader);
+        //jwt verify
+        return {
+            username: "123"
+        };
+    }
 });
 server.listen(3000);

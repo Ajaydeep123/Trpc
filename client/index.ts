@@ -8,6 +8,11 @@ const trpc = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
       url: 'http://localhost:3000',
+       async headers() {
+        return {
+            Authorization: "Bearer 123"  //Authorization: "Bearer "+ localStorage.getItem("token");
+        }
+      },    
     }),
   ],
 });
@@ -21,14 +26,21 @@ const trpc = createTRPCProxyClient<AppRouter>({
 
 // }
 
-async function main(){
-    let response = await trpc.signUp.mutate({
-        email: "ajaydeep@gmail.com",
-        password: "123123"
+// async function main(){
+//     let response = await trpc.signUp.mutate({
+//         email: "ajaydeep@gmail.com",
+//         password: "123123"
+//     })
+
+//     console.log(response);    
+// }
+
+async function main() {
+    let response = await trpc.createTodo.mutate({
+        title: "ajaydeep@gmail.com",
     })
 
     console.log(response);
-    
 }
 
 main().catch(console.error);
